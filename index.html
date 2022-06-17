@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod Plot</title>
+    <link href="http://fonts.cdnfonts.com/css/kids-text-display-2" rel="stylesheet">
+    <style>
+        body {
+            width: 1500px;
+            overflow: hidden;
+        }
+        .item {
+            display: inline-block;
+            width: 100px;
+            height: 500px;
+        }
+        .container {
+            position: relative;
+            height: 400px;
+            width: 100px;
+        }
+        .bar {
+            background-color: black;
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+        }
+        .text {
+            transform: rotateZ(45deg) translateX(50px);
+            top: 346px;
+            position: absolute;
+            width: 1px;
+            white-space: nowrap;
+            font-family: 'KIDS Text', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        fetch('https://warze.org/jwmod/getall').then((response) => {
+            response.text().then((text) => {
+                const obj = JSON.parse(text.replaceAll("'",'"'));
+
+                const arr = [];
+                for (var downloads in obj) {
+                    arr.push([downloads, obj[downloads]])
+                };
+
+                arr.sort(function(a, b) {
+                    return a[1] - b[1];
+                });
+                
+                arr.forEach((mod) => {
+                    document.body.innerHTML += `
+                    <div class="item">
+                        <div class="container">
+                            <div class="bar" style="height:${(400 / arr[arr.length - 1][1]) * mod[1]}px">
+                            </div>
+                        </div>
+                        <h1 class="text">${mod[0]} - ${mod[1]}</h1>
+                    </div>
+                    `
+                })
+                    
+            });
+        });
+    </script>
+</body>
+</html>
